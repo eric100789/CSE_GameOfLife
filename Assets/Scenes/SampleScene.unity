@@ -489,6 +489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0
   saturation: 100
+  diedImage: {fileID: 7544346521047763930, guid: 90883768a2dbbaa4c8b99ffc7b10670a, type: 3}
 --- !u!61 &1964478116
 BoxCollider2D:
   m_ObjectHideFlags: 0

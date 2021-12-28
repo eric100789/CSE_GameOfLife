@@ -6,9 +6,9 @@ public class SheepControl : MonoBehaviour
 {
     [SerializeField] private float speed; 
     [SerializeField] private int saturation = 100;
+    [SerializeField] private GameObject diedImage;
     private float ftime = 0f;
     private GameObject getWolfVision;
-
 
     void Start()
     {
@@ -21,8 +21,17 @@ public class SheepControl : MonoBehaviour
         {
             ChangeSaturation(-5);
             ftime = 0f;
-            Debug.Log(getWolfVision.GetComponent<SheepVision>().findTarget);
         }
+
+        if(saturation <= 0)
+        {
+            Debug.Log(this.gameObject.name + " died because of hungry.");
+            Instantiate(diedImage, this.transform.position, this.transform.rotation);
+            Destroy(this.gameObject);
+        }
+
+
+
     }
 
     void ChangeSaturation(int num)
