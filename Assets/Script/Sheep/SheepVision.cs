@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class SheepVision : MonoBehaviour
 {
-    [SerializeField] private GameObject targetObject;
+    [SerializeField] private string targetObjectTag;
     public bool findTarget = false;
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if(other.gameObject == targetObject)
+        if(other.gameObject.tag == targetObjectTag)
         {
             findTarget = true;
-            Debug.Log(targetObject.name+" Detected");
+            Debug.Log(other.gameObject.name+" Detected");
         }
     }
 
     private void OnTriggerExit2D(Collider2D other) 
     {
-        if(other.gameObject == targetObject)
+        if(other.gameObject.tag == targetObjectTag)
         {
             findTarget = false;
-            Debug.Log(targetObject.name+" Exited");
+            Debug.Log(other.gameObject.name+" Exited");
         }
     }
 }
