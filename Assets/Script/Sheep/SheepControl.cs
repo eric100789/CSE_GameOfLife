@@ -9,9 +9,13 @@ public class SheepControl : MonoBehaviour
     [SerializeField] private int saturation = 99;
     [SerializeField] private GameObject diedImage;
     [SerializeField] private GameObject bornedSheep;
+    private float randomValue_x;
+    private float randomValue_y;
     private float ftime = 0f;
-    private float waitTimeEat = 0f;
+    public float waitTimeEat = 0f;
+    private float savedTime = 2.1f;
     private bool findFriend = false;
+    private Vector2 memoryWolfPos;
     private GameObject getWolfVision;
     private GameObject getGrassHitBox;
     private GameObject getGrassVision;
@@ -30,10 +34,14 @@ public class SheepControl : MonoBehaviour
         isAte = gameObject.transform.GetChild(3).gameObject;
         getAnotherSheep = gameObject.transform.GetChild(4).gameObject;
         touchAnotherSheep = gameObject.transform.GetChild(5).gameObject;
+        randomValue_x = UnityEngine.Random.Range(-50f,50f);
+        randomValue_y = UnityEngine.Random.Range(-50f,50f);
+        memoryWolfPos = new Vector2(0,0);
     }
-    void Update()
+    void FixedUpdate()
     {
         ftime += Time.deltaTime;
+        savedTime += Time.deltaTime;
         if(ftime >= 1f && !(findFriend)) //持續扣飢餓度
         {
             ChangeSaturation(-5);
@@ -42,39 +50,51 @@ public class SheepControl : MonoBehaviour
 
         if(saturation <= 0 || isAte.GetComponent<SheepVision>().findTarget) //餓死了或被殺死了
         {
-            Instantiate(diedImage, this.transform.position, this.transform.rotation);
-            Destroy(this.gameObject);
+            DieImage();
         }
 
 
 
         if(getWolfVision.GetComponent<SheepVision>().findTarget) //如果發現狼 無情開跑
         {
-            Debug.Log(this.gameObject.name + " found a Wolf");
+            savedTime = 0f;
+            memoryWolfPos = new Vector2( getWolfVision.GetComponent<SheepVision>().targetObject.GetComponent<Transform>().position.x , 
+                                         getWolfVision.GetComponent<SheepVision>().targetObject.GetComponent<Transform>().position.y);
+
             RunAway(getWolfVision);
 
         }
+        else if (savedTime <= 2f) //遠離剛剛狼的地方
+        {
+            RunOnPosition(memoryWolfPos.x,memoryWolfPos.y);
+        }
         else if(getGrassHitBox.GetComponent<SheepVision>().findTarget) //如果站在草上 等待一秒食用
         {
-            Debug.Log(this.gameObject.name + " have to eat a Grass");
             waitTimeEat += Time.deltaTime;
             if(waitTimeEat >= 1f)
             {
                 ChangeSaturation(50);
-                Debug.Log(this.gameObject.name + " had ate the Grass");
                 waitTimeEat = 0f;
             }
         }
+
         else if (getAnotherSheep.GetComponent<SheepVision>().findTarget && saturation>=100) //飽的時候發現其他羊
         {
             findFriend = true;
-            Debug.Log(this.gameObject.name + " found Sheep friend");
             RunTo(getAnotherSheep);
         }
         else if (getGrassVision.GetComponent<SheepVision>().findTarget) //發現有草
         {
-            Debug.Log(this.gameObject.name + " found the Grass");
             RunTo(getGrassVision);
+        }
+        else //亂走
+        {
+            if (ftime >= 0.25f && ftime<=0.251f || ftime >= 0.75f && ftime<=0.751f)
+            {
+                randomValue_x = UnityEngine.Random.Range(-50f,50f);
+                randomValue_y = UnityEngine.Random.Range(-50f,50f);
+            }
+            RunOnPosition(randomValue_x,randomValue_y);
 
         }
         
@@ -93,6 +113,7 @@ public class SheepControl : MonoBehaviour
         if(touchAnotherSheep.GetComponent<SheepVision>().findTarget && findFriend)
         {
             saturation /= 2;
+            GameObject.Find("SheepNumber").GetComponent<SheepNum>().sheepAdd(1);
             Instantiate(bornedSheep, this.transform.position, this.transform.rotation);
         }
 
@@ -133,6 +154,21 @@ public class SheepControl : MonoBehaviour
 
         transform.Translate(unitVector.x*-0.0001f*speed*(float)Math.Pow(saturation*0.1,0.25), 
                             unitVector.y*-0.0001f*speed*(float)Math.Pow(saturation*0.1,0.25) , 0);
+    }
+
+    void RunOnPosition(float x , float y)
+    {
+        unitVector = new Vector3( GetUnit(0f, x , 0f , y) , GetUnit(0f, y , 0f , x) );
+
+        transform.Translate(unitVector.x*0.0001f*speed*(float)Math.Pow(saturation*0.1,0.25), 
+                            unitVector.y*0.0001f*speed*(float)Math.Pow(saturation*0.1,0.25) , 0);
+    }
+
+    public void DieImage()
+    {
+        Instantiate(diedImage, this.transform.position, this.transform.rotation);
+        GameObject.Find("SheepNumber").GetComponent<SheepNum>().sheepAdd(-1);
+        Destroy(this.gameObject);
     }
 
 }

@@ -301,7 +301,7 @@ Transform:
   m_GameObject: {fileID: 9140156325649837105}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.38, y: -0.51, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_Children:
   - {fileID: 9140156325840066312}
   - {fileID: 9140156325974915569}
@@ -375,10 +375,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4bac80a29df9c04682e77aded956353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 180
   saturation: 99
   diedImage: {fileID: 7544346521047763930, guid: 90883768a2dbbaa4c8b99ffc7b10670a, type: 3}
   bornedSheep: {fileID: 9140156325649837105}
+  waitTimeEat: 0
 --- !u!50 &9140156325649837108
 Rigidbody2D:
   serializedVersion: 4
@@ -498,8 +499,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9140156325974915569}
-  - component: {fileID: 9140156325974915571}
   - component: {fileID: 9140156325974915568}
+  - component: {fileID: 1611976949330586189}
   m_Layer: 0
   m_Name: SheepEatGrassHitBox
   m_TagString: Untagged
@@ -521,22 +522,6 @@ Transform:
   m_Father: {fileID: 9140156325649837107}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &9140156325974915571
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9140156325974915534}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1.8
 --- !u!114 &9140156325974915568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,3 +537,19 @@ MonoBehaviour:
   targetObjectTag: Grass
   findTarget: 0
   targetObject: {fileID: 0}
+--- !u!70 &1611976949330586189
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9140156325974915534}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.12904836, y: 0.18066975}
+  m_Size: {x: 4.286515, y: 2.9099903}
+  m_Direction: 1
